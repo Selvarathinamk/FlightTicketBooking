@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FlightDetail</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #7972ddfe, #89b068);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 36px;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .table-container {
+      width: 90%;
+      max-width: 1100px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      margin: 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+    }
+
+    thead {
+      background-color: rgba(0, 150, 255, 0.3);
+      color: black;
+    }
+
+    thead td {
+      font-weight: bold;
+      padding: 14px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    tbody td {
+      padding: 12px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.589);
+    }
+
+    tbody tr:hover {
+      background-color: rgba(198, 206, 211, 0.418);
+      transition: background-color 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      thead td, tbody td {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Booked Flight Details</h1>
+  <div class="table-container">
+    <table class="t">
+      <thead>
+        <tr>
+          <td>Id</td>
+          <td>Name</td>
+          <td>Location</td>
+          <td>Destination</td>
+          <td>Email</td>
+          <td>FlightNumber</td>
+          <td>FlightDetails</td>
+        </tr>
+      </thead>
+      <tbody id="data">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    window.onload = function () {
+      fetch("http://localhost:8080/Flight/bookedflight")
+        .then((response) => response.json())
+        .then((FlightDetail) => {
+          const da = document.getElementById("data");
+          FlightDetail.forEach((element) => {
+            var r = `<tr>
+              <td>${element.id}</td>
+              <td>${element.name}</td>
+              <td>${element.location}</td>
+              <td>${element.destination}</td>
+              <td>${element.email}</td>
+              <td>${element.flightno}</td>
+              <td>${element.flightname}</td>
+            </tr>`;
+            da.innerHTML += r;
+          });
+        });
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookedFlight</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            height: 110vh;
+            background-image: url('book.jpg');
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        form {
+            background-color: rgba(207, 138, 35, 0.525);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 6px;
+            color: #cceeff;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #00bcd4;
+            border-radius: 8px;
+            background-color: #1e2b38;
+            color: #ffffff;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus {
+            box-shadow: 0 0 8px #00bcd4;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #00bcd4;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0097a7;
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+    <form id="flightForm">
+        <br><br><br>
+        <label>name:</label><br>
+        <input type="text" name="name"><br><br>
+        <label>Email:</label><br>
+        <input type="email" name="Email"><br><br>
+        <label>Location:</label><br>
+        <input type="text" name="location"><br><br>
+        <label>Destination:</label><br>
+        <input type="text" name="Destination"><br><br>
+        <label>Flightname:</label><br>
+        <input type="text" name="Flightname"><br><br>
+        <label>Flightno:</label><br>
+        <input type="number" name="Flightno"><br><br>
+        <input type="submit">
+    </form>
+    <script>
+      document.getElementById("flightForm").addEventListener("submit", function (e) {
+          e.preventDefault(); 
+      
+          const formData = new FormData(this);
+          const enteredFlightname = formData.get("Flightname");
+          const enteredFlightno = formData.get("Flightno");
+      
+          fetch("http://localhost:8080/FlightDetails")
+          .then((response) => response.json())
+          .then((flightDetails) => {
+              const matchFound = flightDetails.some(
+                  flight => flight.name === enteredFlightname && flight.no == enteredFlightno
+              );
+      
+              if (matchFound) {
+                  // Proceed to register flight
+                  fetch("http://localhost:8080/Flight/register", {
+                      method: "POST",
+                      body: formData,
+                  })
+                  .then(response => {
+                      if (response.ok) {
+                          alert("Flight registered successfully!");
+                      } else {
+                          alert("Something went wrong. Please try again.");
+                      }
+                  })
+                  .catch(error => {
+                      console.error("Error:", error);
+                      alert("Network error occurred.");
+                  });
+              } else {
+                  alert("Flightname or Flightno does not exist in the database.");
+              }
+          })
+          .catch(error => {
+              console.error("Error fetching flight details:", error);
+              alert("Failed to check flight details. Server error.");
+          });
+      });
+      </script>
+      
+      
+
+</body>
+</html>
